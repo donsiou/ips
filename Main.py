@@ -11,8 +11,14 @@ lockWrite = threading.Lock()
 dao = ThermocoupleDAO()
 stopThreadRead = False
 stopThreadWrite = False
-timeSleep = 0.5
+timeSleep = 0
 
+
+def getDataFromThermocouples():
+    '''
+        Cette methode return une list de 5 éléments [t1, t2, t3, t4, t5]
+    '''
+    return random.sample(range(10, 30), 5)
 
 def getDataFromDb(nbElements):
     return [thermocouple.getValeursTemperature() for thermocouple in dao.findNElements(nbElements)]
@@ -53,9 +59,10 @@ def readFromDb(object, nbElements):
 def addToDb(nbElements):
     compteur = 0
     while not stopThreadWrite:
+        
         print("Writing value : ")
         #Generate 5 random numbers between 10 and 30
-        randomlist = random.sample(range(10, 30), 5)
+        randomlist = getDataFromThermocouples()
         t1 = Thermocouples(listTemperatures=randomlist)
         lockWrite.acquire()
         dao.create(t1)
@@ -64,7 +71,11 @@ def addToDb(nbElements):
         if(compteur == nbElements):
             lockWrite.acquire()
             lockRead.release()
+            sleep(0.1)
             compteur = 0
+
+    
+    
 
     
 

@@ -3,6 +3,7 @@ import random
 import matplotlib
 import Main
 from connection import Connection
+from time import sleep
 matplotlib.use('Qt5Agg')
 
 from PyQt5 import QtCore, QtWidgets
@@ -27,18 +28,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas = MplCanvas(self, width=5, height=4, dpi=100)
         self.setCentralWidget(self.canvas)
 
-        n_data = 10
+        n_data = 30
         self.xdata = []
         self.ydata = [[], [], [], [], [], []] 
         self.xdata.append(list(range(n_data)))
-        self.ydata.append(Main.getDataFromDb(n_data))
+        #self.ydata.append(Main.getDataFromDb(n_data))
         Main.update_plot(self, n_data)
 
         self.show()
 
-        Main.readWriteDB(self, 10)
+        Main.readWriteDB(self, 5)
 
-        # Setup a timer to trigger the redraw by calling update_plot.
         
 
     
@@ -49,4 +49,5 @@ w = MainWindow()
 app.exec_()
 Main.stopThreadRead = True
 Main.stopThreadWrite = True
+sleep(2)
 Connection.getInstance().getConnection().close()
