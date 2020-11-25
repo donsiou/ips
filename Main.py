@@ -9,39 +9,50 @@ import time
 lockRead = threading.Lock()
 lockWrite = threading.Lock()
 dao = ThermocoupleDAO()
+stopThreadRead = False
+stopThreadWrite = False
+timeSleep = 0.5
 
 
 def getDataFromDb(nbElements):
-    return [thermocouple.getValeursTemperature()for thermocouple in dao.findNElements(nbElements)]
+    return [thermocouple.getValeursTemperature() for thermocouple in dao.findNElements(nbElements)]
 
 
 def update_plot(object, nbElements):
-        list = getDataFromDb(nbElements)
-        couleurs = ['r', 'b', 'g', 'y', 'p', 'o']
-        for i in range(6):
-            # Drop off the nbElements element, append a new one.
+        liste = list(zip(*getDataFromDb(nbElements)))
+        couleurs = ['r', 'b', 'g', 'y', 'r', 'o']
+        i = 0
+        object.canvas.axes[1][2].cla()
+        #Les cinq premiers axes, chacune pour un termocoupleurs
+        for i in range(5):
             c = int(i%3)
             r = int(i/3)
-            object.ydata[i] = object.ydata[i][nbElements:] + getDataFromDb(nbElements)
+            object.ydata[i] = object.ydata[i][nbElements:] + list(liste[i])
             object.canvas.axes[r][c].cla()  # Clear the canvas.
             object.canvas.axes[r][c].plot(object.xdata[0], object.ydata[i], couleurs[i])
+            object.canvas.axes[1][2].plot(object.xdata[0], object.ydata[i], couleurs[i])
             # Trigger the canvas to update and redraw.
             object.canvas.draw()
+        
+        #Pour la dérniére on va mettre tout pour comparer
+
+
+
 
 
 
 def readFromDb(object, nbElements):
-    while True:
+    while not stopThreadRead:
         print("Reading value : ")
         lockRead.acquire()
         update_plot(object,nbElements)
         lockWrite.release()
-        sleep(0.5)
+        sleep(timeSleep)
    
 
 def addToDb(nbElements):
     compteur = 0
-    while True:
+    while not stopThreadWrite:
         print("Writing value : ")
         #Generate 5 random numbers between 10 and 30
         randomlist = random.sample(range(10, 30), 5)
