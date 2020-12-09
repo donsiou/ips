@@ -5,20 +5,27 @@ from connection import Connection
 import threading
 import random
 import time
+import trame as tm
+import asyncio
 
+maxTmpValue = 300
+minTmpValue = 0
 lockRead = threading.Lock()
 lockWrite = threading.Lock()
 dao = ThermocoupleDAO()
 stopThreadRead = False
 stopThreadWrite = False
 timeSleep = 0
+ser = tm.TempSensorSerial("COM6")
 
 
-def getDataFromThermocouples():
+async def getDataFromThermocouples():
     '''
         Cette methode return une list de 5 éléments [t1, t2, t3, t4, t5]
     '''
-    return random.sample(range(10, 30), 5)
+    return await ser.read_temp(1)
+    # return random.sample(range(0, 50), 5)
+
 
 def getDataFromDb(nbElements):
     return [thermocouple.getValeursTemperature() for thermocouple in dao.findNElements(nbElements)]
@@ -35,12 +42,12 @@ def update_plot(object, nbElements):
             r = int(i/3)
             object.ydata[i] = object.ydata[i][nbElements:] + list(liste[i])
             object.canvas.axes[r][c].cla()  # Clear the canvas.
+            object.canvas.axes[r][c].set_title("T{}".format(i+1), y=-0.01)
+            object.canvas.axes[r][c].set_ylim([minTmpValue, maxTmpValue])
             object.canvas.axes[r][c].plot(object.xdata[0], object.ydata[i], couleurs[i])
-            object.canvas.axes[1][2].plot(object.xdata[0], object.ydata[i], couleurs[i])
+            #object.canvas.axes[1][2].plot(object.xdata[0], object.ydata[i], couleurs[i])
             # Trigger the canvas to update and redraw.
-            object.canvas.draw()
-        
-        #Pour la dérniére on va mettre tout pour comparer
+        object.canvas.draw()
 
 
 
@@ -56,13 +63,14 @@ def readFromDb(object, nbElements):
         sleep(timeSleep)
    
 
-def addToDb(nbElements):
+async def addToDb(nbElements):
     compteur = 0
     while not stopThreadWrite:
         
         print("Writing value : ")
         #Generate 5 random numbers between 10 and 30
-        randomlist = getDataFromThermocouples()
+        randomlist = await getDataFromThermocouples()
+        if (randomlist == None): continue
         t1 = Thermocouples(listTemperatures=randomlist)
         lockWrite.acquire()
         dao.create(t1)
@@ -74,21 +82,26 @@ def addToDb(nbElements):
             sleep(0.1)
             compteur = 0
 
-    
-    
+def getValuesThread(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
 
     
 
 
 
 def readWriteDB(object, nbElements):
+    loop = asyncio.new_event_loop()
+
     # Connexion et creation de la table
     dao.clear()
     lockRead.acquire()
     # Workspace
     xRead = threading.Thread(target=readFromDb, args=(object, nbElements,))
     xRead.start()
-    xWrite = threading.Thread(target=addToDb, args=(nbElements,))
+    xWrite = threading.Thread(target=getValuesThread, args=(loop,))
     xWrite.start()
+
+    asyncio.run_coroutine_threadsafe(addToDb(nbElements), loop)
 
 
