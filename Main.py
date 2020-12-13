@@ -16,7 +16,7 @@ dao = ThermocoupleDAO()
 stopThreadRead = False
 stopThreadWrite = False
 timeSleep = 0
-ser = tm.TempSensorSerial("COM6")
+ser = tm.TempSensorSerial("COM7")
 
 
 async def getDataFromThermocouples():
