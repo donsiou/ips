@@ -16,15 +16,13 @@ dao = ThermocoupleDAO()
 stopThreadRead = False
 stopThreadWrite = False
 timeSleep = 0
-ser = tm.TempSensorSerial("COM6")
 
 
-async def getDataFromThermocouples():
+def getDataFromThermocouples():
     '''
         Cette methode return une list de 5 éléments [t1, t2, t3, t4, t5]
     '''
-    return await ser.read_temp(1)
-    # return random.sample(range(0, 50), 5)
+    return random.sample(range(minTmpValue, maxTmpValue), 5)
 
 
 def getDataFromDb(nbElements):
@@ -63,13 +61,12 @@ def readFromDb(object, nbElements):
         sleep(timeSleep)
    
 
-async def addToDb(nbElements):
+def addToDb(nbElements):
     compteur = 0
     while not stopThreadWrite:
-        
         print("Writing value : ")
         #Generate 5 random numbers between 10 and 30
-        randomlist = await getDataFromThermocouples()
+        randomlist = getDataFromThermocouples()
         if (randomlist == None): continue
         t1 = Thermocouples(listTemperatures=randomlist)
         lockWrite.acquire()
@@ -82,26 +79,18 @@ async def addToDb(nbElements):
             sleep(0.1)
             compteur = 0
 
-def getValuesThread(loop):
-    asyncio.set_event_loop(loop)
-    loop.run_forever()
-
     
 
 
 
 def readWriteDB(object, nbElements):
-    loop = asyncio.new_event_loop()
-
     # Connexion et creation de la table
     dao.clear()
     lockRead.acquire()
     # Workspace
     xRead = threading.Thread(target=readFromDb, args=(object, nbElements,))
     xRead.start()
-    xWrite = threading.Thread(target=getValuesThread, args=(loop,))
+    xWrite = threading.Thread(target=addToDb, args=(nbElements,))
     xWrite.start()
-
-    asyncio.run_coroutine_threadsafe(addToDb(nbElements), loop)
 
 
