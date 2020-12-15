@@ -17,6 +17,8 @@ stopThreadRead = False
 stopThreadWrite = False
 timeSleep = 0
 
+ser = ser=serial.Serial ('com7',9600)
+
 
 def getDataFromThermocouples():
     '''

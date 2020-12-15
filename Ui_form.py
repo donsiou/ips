@@ -95,7 +95,7 @@ class Ui_Main(object):
         self.radioT3 = QtWidgets.QRadioButton(self.tab)
         self.radioT3.setGeometry(QtCore.QRect(170, 190, 21, 21))
         self.radioT3.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-        self.radioT3.setStyleSheet("background-color: rgb(218, 218, 218);\n"
+        self.radioT3.setStyleSheet("\n"
 "")
         self.radioT3.setText("")
         self.radioT3.setObjectName("radioT3")
@@ -129,5 +129,5 @@ class Ui_Main(object):
         self.radioT3.setToolTip(_translate("Main", "T3"))
         self.radioT2.setToolTip(_translate("Main", "T2"))
         self.radioT4.setToolTip(_translate("Main", "T4"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Main", "Page"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Main", "Concrete mode"))
 
