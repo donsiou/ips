@@ -18,7 +18,7 @@ def get_ports() -> typing.List[typing.Tuple[str, str]]:
 
 
 class TempSensorSerial:
-    def __init__(self, port, baudrate=9600, timeout=2):
+    def __init__(self, port, baudrate=115200, timeout=2):
         self.__ser = ser = serial.Serial(port=port, baudrate=baudrate, timeout=timeout,
                                          xonxoff=False, rtscts=False, dsrdtr=False)
         ser.flushInput()
@@ -78,7 +78,7 @@ class TempSensorSerial:
 
 async def main(use_voltages=False):
     import os
-    ser = TempSensorSerial("COM7")
+    ser = TempSensorSerial("COM6")
 
     while True:
         values = await (ser.read_voltages(1) if use_voltages else ser.read_temp(1))

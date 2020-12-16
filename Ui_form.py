@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\User\Documents\Python\PyQt\SQLite\form.ui'
+# Form implementation generated from reading ui file 'c:\Users\User\Documents\ips\Thermocouple\ips-master\ips-master\form.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -74,37 +74,37 @@ class Ui_Main(object):
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.label = QtWidgets.QLabel(self.tab)
-        self.label.setGeometry(QtCore.QRect(100, 0, 721, 571))
+        self.label.setGeometry(QtCore.QRect(10, 0, 811, 571))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("../../../../Pictures/radiateur.jpg"))
+        self.label.setPixmap(QtGui.QPixmap("../../../../../Pictures/Radiateur.png"))
         self.label.setObjectName("label")
         self.radioT1 = QtWidgets.QRadioButton(self.tab)
-        self.radioT1.setGeometry(QtCore.QRect(350, 80, 31, 41))
+        self.radioT1.setGeometry(QtCore.QRect(260, 400, 31, 41))
         self.radioT1.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.radioT1.setText("")
         self.radioT1.setIconSize(QtCore.QSize(44, 30))
         self.radioT1.setChecked(True)
         self.radioT1.setObjectName("radioT1")
         self.lcdTemp = QtWidgets.QLCDNumber(self.tab)
-        self.lcdTemp.setGeometry(QtCore.QRect(120, 10, 111, 51))
+        self.lcdTemp.setGeometry(QtCore.QRect(50, 10, 111, 51))
+        self.lcdTemp.setStyleSheet("color: rgb(255, 255, 255);")
         self.lcdTemp.setObjectName("lcdTemp")
         self.radioT5 = QtWidgets.QRadioButton(self.tab)
-        self.radioT5.setGeometry(QtCore.QRect(340, 450, 16, 20))
+        self.radioT5.setGeometry(QtCore.QRect(400, 420, 16, 20))
         self.radioT5.setText("")
         self.radioT5.setObjectName("radioT5")
         self.radioT3 = QtWidgets.QRadioButton(self.tab)
-        self.radioT3.setGeometry(QtCore.QRect(170, 190, 21, 21))
+        self.radioT3.setGeometry(QtCore.QRect(170, 230, 21, 21))
         self.radioT3.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-        self.radioT3.setStyleSheet("\n"
-"")
+        self.radioT3.setStyleSheet("")
         self.radioT3.setText("")
         self.radioT3.setObjectName("radioT3")
         self.radioT2 = QtWidgets.QRadioButton(self.tab)
-        self.radioT2.setGeometry(QtCore.QRect(470, 150, 21, 20))
+        self.radioT2.setGeometry(QtCore.QRect(390, 210, 21, 20))
         self.radioT2.setText("")
         self.radioT2.setObjectName("radioT2")
         self.radioT4 = QtWidgets.QRadioButton(self.tab)
-        self.radioT4.setGeometry(QtCore.QRect(250, 320, 16, 20))
+        self.radioT4.setGeometry(QtCore.QRect(180, 400, 16, 20))
         self.radioT4.setText("")
         self.radioT4.setObjectName("radioT4")
         self.tabWidget.addTab(self.tab, "")
@@ -129,5 +129,5 @@ class Ui_Main(object):
         self.radioT3.setToolTip(_translate("Main", "T3"))
         self.radioT2.setToolTip(_translate("Main", "T2"))
         self.radioT4.setToolTip(_translate("Main", "T4"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Main", "Concrete mode"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Main", "Concrete Mode"))
 

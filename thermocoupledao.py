@@ -12,7 +12,7 @@ class ThermocoupleDAO:
     def createTable(self):
         sql_create_thermocouple_table = """ CREATE TABLE IF NOT EXISTS thermocouple (
                                             id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                                            datetime REAL,
+                                            datetime INTEGER,
                                             t1       DOUBLE,
                                             t2       DOUBLE,
                                             t3       DOUBLE,
@@ -28,8 +28,8 @@ class ThermocoupleDAO:
 
     def create(self, thermocouple):
         sql = ''' INSERT INTO thermocouple(datetime, t1, t2, t3, t4, t5)
-              VALUES(julianday(?),?,?,?,?,?) '''
-        data = (str(thermocouple.getDateTime()), *thermocouple.getValeursTemperature())
+              VALUES(?,?,?,?,?,?) '''
+        data = (thermocouple.getDateTime(), *thermocouple.getValeursTemperature())
         print(data)
         try:
             c = self._conn.cursor()
@@ -40,7 +40,7 @@ class ThermocoupleDAO:
 
     
     def find(self, id):
-        sql = '''SELECT id, datetime(datetime) as datetime, t1, t2, t3, t4, t5
+        sql = '''SELECT id, datetime, t1, t2, t3, t4, t5
             FROM `thermocouple`
             WHERE id=?;'''
         try:
@@ -53,7 +53,7 @@ class ThermocoupleDAO:
         pass
 
     def findNElements(self, nbElements):
-        sql = '''SELECT id, datetime(datetime) as datetime, t1, t2, t3, t4, t5
+        sql = '''SELECT id, datetime, t1, t2, t3, t4, t5
             FROM `thermocouple`
             ORDER BY id DESC
             LIMIT ?;'''
@@ -81,8 +81,9 @@ class ThermocoupleDAO:
 
 
     def rowToObject(self, row):
-        dt = datetime.strptime(row[1], '%Y-%m-%d %H:%M:%S')
-        lt = [row[2], row[3], row[4], row[5], row[5]]
-        return Thermocouples(datetime=dt, listTemperatures=lt)
+        dt = row[1]
+        lt = [row[2], row[3], row[4], row[5], row[6]]
+        return Thermocouples(timestamp=dt, listTemperatures=lt)
        
+
     

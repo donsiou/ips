@@ -1,3 +1,4 @@
+from sqlite3.dbapi2 import Timestamp
 import sys
 import random
 import matplotlib
@@ -87,13 +88,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Main):
         n_data = 20
         self.xdata = []
         self.ydata = [[], [], [], [], [], []] 
-        self.xdata.append(list(range(n_data)))
-        #self.ydata.append(Main.getDataFromDb(n_data))
         Main.update_plot(self, n_data)
 
         self.show()
 
-        Main.readWriteDB(self, 3)
+        Main.readWriteDB(self, 1)
 
 
     @pyqtSlot()
@@ -136,27 +135,28 @@ class MainWindow(QtWidgets.QMainWindow, Ui_Main):
     def on_btnUpdate_clicked(self):
         nbElements = self.slideNbValue.value()
         dataAllThermo = Main.getDataFromDb(nbElements)
+        Timestamps = [data[0] for data in dataAllThermo]
         listLegends = []
         self.canvasAnalyse.axes.cla()
-        xData = list(range(nbElements))
+        xData = Timestamps
         if(self.checkT1.isChecked()):
-            dataT1 = [data[0] for data in dataAllThermo]
+            dataT1 = [data[1] for data in dataAllThermo]
             self.canvasAnalyse.axes.plot(xData, dataT1, 'm')
             listLegends.append("T1")
         if(self.checkT2.isChecked()):
-            dataT2 = [data[1] for data in dataAllThermo]
+            dataT2 = [data[2] for data in dataAllThermo]
             self.canvasAnalyse.axes.plot(xData, dataT2, 'b')
             listLegends.append("T2")
         if(self.checkT3.isChecked()):
-            dataT3 = [data[2] for data in dataAllThermo]
+            dataT3 = [data[3] for data in dataAllThermo]
             self.canvasAnalyse.axes.plot(xData, dataT3, 'g')
             listLegends.append("T3")
         if(self.checkT4.isChecked()):
-            dataT4 = [data[3] for data in dataAllThermo]
+            dataT4 = [data[4] for data in dataAllThermo]
             self.canvasAnalyse.axes.plot(xData, dataT4, 'y')
             listLegends.append("T4")
         if(self.checkT5.isChecked()):
-            dataT5 = [data[4] for data in dataAllThermo]
+            dataT5 = [data[5] for data in dataAllThermo]
             self.canvasAnalyse.axes.plot(xData, dataT5, 'r')
             listLegends.append("T5")
         self.canvasAnalyse.axes.set_ylim([Main.minTmpValue, Main.maxTmpValue])
